@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AcronymMVVM</string>
+    <string name="hint_enter_acronym">Enter Acronym</string>
+
+    <string name="no_internet">Please check your internet connection</string>
+    <string name="network_error">Network error, could get data,please try again!</string>
+    <string name="search_error">there is no such Acronym</string>
+    <string name="no_data">No Acronym/Initialism found</string>
+    <string name="acronyms">Acronyms</string>
+</resources>
