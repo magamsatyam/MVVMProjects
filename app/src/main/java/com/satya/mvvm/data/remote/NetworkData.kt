@@ -19,11 +19,13 @@ import kotlin.reflect.KSuspendFunction1
 
 class NetworkData @Inject
 constructor(private val serviceGenerator: APITask, private val networkConnectivity: NetworkConnectivity) : RemoteDataSource {
-    override suspend fun requestRecipes(): Resource<Acronyms> {
+    lateinit var acronymStr : String
+    override suspend fun getAcronyms(acronym: String): Resource<List<Acronyms>> {
+        acronymStr = acronym
         val acronymService = serviceGenerator.createService(AcronymService::class.java)
         return when (val response = processCall(acronymService::fetchAcronyms)) {
             is List<*> -> {
-                Resource.Success(data = response as Acronyms)
+                Resource.Success(data = response as List<Acronyms>)
             }
             else -> {
                 Resource.DataError(errorCode = response as Int)
@@ -31,12 +33,12 @@ constructor(private val serviceGenerator: APITask, private val networkConnectivi
         }
     }
 
-    private suspend fun processCall(responseCall: KSuspendFunction1<String, Response<List<AcronymsItem>>>): Any? {
+    private suspend fun processCall(responseCall: KSuspendFunction1<String, Response<List<Acronyms>>>): Any? {
         if (!networkConnectivity.isConnected()) {
             return NO_INTERNET_CONNECTION
         }
         return try {
-            val response = responseCall.invoke(String())
+            val response = responseCall.invoke(acronymStr)
             val responseCode = response.code()
             if (response.isSuccessful) {
                 response.body()

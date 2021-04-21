@@ -10,9 +10,10 @@ import com.satya.mvvm.databinding.ActivityMainBinding
 import com.satya.mvvm.model.Acronyms
 import com.satya.mvvm.ui.adapter.AcronymsAdapter
 import com.satya.mvvm.ui.base.BaseActivity
-import com.task.utils.observe
 import com.satya.mvvm.utils.toGone
 import com.satya.mvvm.utils.toVisible
+import com.satya.mvvm.utils.observe
+import com.satya.mvvm.viewmodel.AcronymViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,10 +32,11 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.title = getString(R.string.acronyms)
+        binding.lifecycleOwner = this
+        binding.acronymViewModel = acronymViewModel
         val layoutManager = LinearLayoutManager(this)
         binding.rvRecipesList.layoutManager = layoutManager
         binding.rvRecipesList.setHasFixedSize(true)
-
     }
 
     private fun showLoadingView() {
@@ -49,7 +51,7 @@ class MainActivity : BaseActivity() {
         binding.pbLoading.toGone()
     }
 
-    private fun getAcronymsList(status: Resource<Acronyms>) {
+    private fun getAcronymsList(status: Resource<List<Acronyms>>) {
         when (status) {
             is Resource.Loading -> showLoadingView()
             is Resource.Success -> status.data?.let { bindListData(acronyms = it) }
@@ -64,9 +66,9 @@ class MainActivity : BaseActivity() {
         observe(acronymViewModel.acronymData, ::getAcronymsList)
     }
 
-    private fun bindListData(acronyms: Acronyms) {
+    private fun bindListData(acronyms: List<Acronyms>) {
         if (!(acronyms.isNullOrEmpty())) {
-            acronymsAdapter = AcronymsAdapter(acronymViewModel, acronyms.get(0))
+            acronymsAdapter = AcronymsAdapter(acronymViewModel, acronyms[0].get(0).lfs)
             binding.rvRecipesList.adapter = acronymsAdapter
             showDataView(true)
         } else {

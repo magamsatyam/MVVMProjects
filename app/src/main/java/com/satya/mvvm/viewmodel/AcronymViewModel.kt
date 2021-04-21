@@ -1,6 +1,8 @@
-package com.satya.mvvm.ui
+package com.satya.mvvm.viewmodel
 
+import android.util.Log
 import androidx.annotation.VisibleForTesting
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -8,6 +10,7 @@ import com.satya.mvvm.data.DataRepositorySource
 import com.satya.mvvm.data.Resource
 import com.satya.mvvm.model.Acronyms
 import com.satya.mvvm.model.AcronymsItem
+import com.satya.mvvm.ui.BaseViewModel
 import com.task.utils.SingleEvent
 import com.task.utils.wrapEspressoIdlingResource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,9 +25,8 @@ class AcronymViewModel @Inject constructor(private val dataRepositorySource: Dat
      * Data --> LiveData, Exposed as LiveData, Locally in viewModel as MutableLiveData
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    val _acronymData = MutableLiveData<Resource<Acronyms>>()
-    val acronymData: LiveData<Resource<Acronyms>> get() = _acronymData
-
+    val _acronymData = MutableLiveData<Resource<List<Acronyms>>>()
+    val acronymData: LiveData<Resource<List<Acronyms>>> get() = _acronymData
 
     //TODO check to make them as one Resource
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -44,14 +46,18 @@ class AcronymViewModel @Inject constructor(private val dataRepositorySource: Dat
     val buttonClicked: LiveData<Boolean>
       get() = _buttonClicked
 
+    val editTextContent = ObservableField<String>()
 
-    fun getAcronyms(acronym: String){
+    fun getAcronyms(){
+        Log.d("viewmodel","getAcronyms() called=="+editTextContent.get())
          viewModelScope.launch {
              _acronymData.value = Resource.Loading()
-             if(acronym.toString().length >= 2){
+             if( editTextContent.toString().length >= 2){
              wrapEspressoIdlingResource {
-                 dataRepositorySource.getAcronyms(acronym).collect {
-                     _acronymData.value = it
+                 editTextContent.get()?.let {
+                     dataRepositorySource.getAcronyms(it).collect {
+                         _acronymData.value = it
+                     }
                  }
              }
          }
@@ -62,4 +68,7 @@ class AcronymViewModel @Inject constructor(private val dataRepositorySource: Dat
         val error = errorManager.getError(errorCode)
         _showToast.value = SingleEvent(error.description)
     }
+
 }
+
+

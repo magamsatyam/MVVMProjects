@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.satya.mvvm.databinding.AcronymItemBinding
 import com.satya.mvvm.model.AcronymsItem
-import com.satya.mvvm.ui.AcronymViewModel
+import com.satya.mvvm.model.LongForm
+import com.satya.mvvm.viewmodel.AcronymViewModel
 import com.satya.mvvm.ui.base.listeners.RecyclerItemListener
 
-class AcronymsAdapter(private val acronymViewModel: AcronymViewModel, private val acronyms: AcronymsItem) : RecyclerView.Adapter<AcronymsViewHolder>() {
+class AcronymsAdapter(private val acronymViewModel: AcronymViewModel, private val acronyms: List<LongForm>) : RecyclerView.Adapter<AcronymsViewHolder>() {
 
     private val onItemClickListener: RecyclerItemListener = object : RecyclerItemListener {
         override fun onItemSelected(recipe: AcronymsItem) {
@@ -22,10 +23,10 @@ class AcronymsAdapter(private val acronymViewModel: AcronymViewModel, private va
     }
 
     override fun onBindViewHolder(holder: AcronymsViewHolder, position: Int) {
-        holder.bind(acronyms.lfs[position], onItemClickListener)
+        holder.bind(acronyms[position], onItemClickListener)
     }
 
     override fun getItemCount(): Int {
-        return acronyms.lfs.size
+        return acronyms.size
     }
 }

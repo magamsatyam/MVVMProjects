@@ -1,7 +1,7 @@
 package com.satya.mvvm.model
 
 
-class Acronyms : ArrayList<AcronymsItem>()
+ class Acronyms : ArrayList<AcronymsItem>()
 
 
 

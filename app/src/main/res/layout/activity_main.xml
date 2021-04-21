@@ -4,9 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
      <variable
          name="acronymViewModel"
-         type="com.satya.mvvm.ui.AcronymViewModel" />
+         type="com.satya.mvvm.viewmodel.AcronymViewModel" />
+
+      <!--  <variable
+            name="editTextObserver"
+            type="com.satya.mvvm.viewmodel.EditTextObserver" />-->
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,8 +32,8 @@
         android:inputType="text"
         android:hint="@string/hint_enter_acronym"
         android:enabled="true"
-        clearOnFocusAndDispatch="@{()->acronymViewModel.getAcronyms(editTextAcronym.getText().toString())}"
-        hideKeyboardOnInputDone="@{true}"
+        android:textColor="@android:color/black"
+        android:text="@={acronymViewModel.editTextContent}"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,6 +47,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Submit"
+        android:onClick="@{(v) -> acronymViewModel.getAcronyms()}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextAcronym" />
