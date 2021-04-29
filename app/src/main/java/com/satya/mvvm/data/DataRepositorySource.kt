@@ -1,7 +1,6 @@
 package com.satya.mvvm.data
 
-import com.satya.mvvm.model.Acronyms
-import com.satya.mvvm.model.AcronymsItem
+import com.satya.mvvm.model.acronym.AcronymItem
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -9,5 +8,5 @@ import kotlinx.coroutines.flow.Flow
  */
 
 interface DataRepositorySource {
-    suspend fun getAcronyms(acronym: String): Flow<Resource<List<Acronyms>>>
+    suspend fun getAcronyms(acronym: String): Flow<Resource<ArrayList<AcronymItem>>>
 }

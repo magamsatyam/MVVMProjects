@@ -1,18 +1,11 @@
 package com.satya.mvvm.model
 
-import android.os.Parcelable
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
 
-@JsonClass(generateAdapter = false)
-@Parcelize
+import com.squareup.moshi.Json
+
 data class AcronymsItem(
     @Json(name = "lfs")
-    val lfs: List<LongForm>,
+    val lfs: List<Lf>,
     @Json(name = "sf")
     val sf: String
-):Parcelable
-
-
-
+)

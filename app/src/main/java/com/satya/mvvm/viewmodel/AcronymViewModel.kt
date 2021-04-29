@@ -1,5 +1,6 @@
 package com.satya.mvvm.viewmodel
 
+import com.satya.mvvm.model.acronym.AcronymItem
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.databinding.ObservableField
@@ -8,7 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.satya.mvvm.data.DataRepositorySource
 import com.satya.mvvm.data.Resource
-import com.satya.mvvm.model.Acronyms
 import com.satya.mvvm.model.AcronymsItem
 import com.satya.mvvm.ui.BaseViewModel
 import com.task.utils.SingleEvent
@@ -25,8 +25,8 @@ class AcronymViewModel @Inject constructor(private val dataRepositorySource: Dat
      * Data --> LiveData, Exposed as LiveData, Locally in viewModel as MutableLiveData
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    val _acronymData = MutableLiveData<Resource<List<Acronyms>>>()
-    val acronymData: LiveData<Resource<List<Acronyms>>> get() = _acronymData
+    val _acronymData = MutableLiveData<Resource<ArrayList<AcronymItem>>>()
+    val acronymData: LiveData<Resource<ArrayList<AcronymItem>>> get() = _acronymData
 
     //TODO check to make them as one Resource
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

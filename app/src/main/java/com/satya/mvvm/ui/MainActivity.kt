@@ -1,5 +1,6 @@
 package com.satya.mvvm.ui
 
+import com.satya.mvvm.model.acronym.AcronymItem
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -7,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.satya.mvvm.R
 import com.satya.mvvm.data.Resource
 import com.satya.mvvm.databinding.ActivityMainBinding
-import com.satya.mvvm.model.Acronyms
 import com.satya.mvvm.ui.adapter.AcronymsAdapter
 import com.satya.mvvm.ui.base.BaseActivity
 import com.satya.mvvm.utils.toGone
@@ -35,26 +35,26 @@ class MainActivity : BaseActivity() {
         binding.lifecycleOwner = this
         binding.acronymViewModel = acronymViewModel
         val layoutManager = LinearLayoutManager(this)
-        binding.rvRecipesList.layoutManager = layoutManager
-        binding.rvRecipesList.setHasFixedSize(true)
+        binding.rvAcronymList.layoutManager = layoutManager
+        binding.rvAcronymList.setHasFixedSize(true)
     }
 
     private fun showLoadingView() {
         binding.pbLoading.toVisible()
         binding.tvNoData.toGone()
-        binding.rvRecipesList.toGone()
+        binding.rvAcronymList.toGone()
     }
 
     private fun showDataView(show: Boolean) {
         binding.tvNoData.visibility = if (show) View.GONE else View.VISIBLE
-        binding.rvRecipesList.visibility = if (show) View.VISIBLE else View.GONE
+        binding.rvAcronymList.visibility = if (show) View.VISIBLE else View.GONE
         binding.pbLoading.toGone()
     }
 
-    private fun getAcronymsList(status: Resource<List<Acronyms>>) {
+    private fun getAcronymsList(status: Resource<ArrayList<AcronymItem>>) {
         when (status) {
             is Resource.Loading -> showLoadingView()
-            is Resource.Success -> status.data?.let { bindListData(acronyms = it) }
+            is Resource.Success -> status.data?.let { bindListData(acronyms = it as ArrayList<AcronymItem>) }
             is Resource.DataError -> {
                 showDataView(false)
                 status.errorCode?.let { acronymViewModel.showToastMessage(it) }
@@ -63,13 +63,13 @@ class MainActivity : BaseActivity() {
     }
 
     override fun observeViewModel() {
-        observe(acronymViewModel.acronymData, ::getAcronymsList)
+        observe(acronymViewModel.acronymData,::getAcronymsList)
     }
 
-    private fun bindListData(acronyms: List<Acronyms>) {
+    private fun bindListData(acronyms: ArrayList<AcronymItem>) {
         if (!(acronyms.isNullOrEmpty())) {
-            acronymsAdapter = AcronymsAdapter(acronymViewModel, acronyms[0].get(0).lfs)
-            binding.rvRecipesList.adapter = acronymsAdapter
+            acronymsAdapter = AcronymsAdapter(acronymViewModel, acronyms[0].lfs)
+            binding.rvAcronymList.adapter = acronymsAdapter
             showDataView(true)
         } else {
             showDataView(false)

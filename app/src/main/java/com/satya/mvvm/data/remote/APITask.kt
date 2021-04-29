@@ -1,14 +1,17 @@
 package com.satya.mvvm.data.remote
 
+import com.google.gson.GsonBuilder
 import com.satya.mvvm.BASE_URL
 import com.satya.mvvm.BuildConfig
 import com.satya.mvvm.data.remote.moshiFactories.MyKotlinJsonAdapterFactory
 import com.satya.mvvm.data.remote.moshiFactories.MyStandardJsonAdapters
+import com.satya.mvvm.utils.DefaultIfNullFactory
 import com.squareup.moshi.Moshi
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -27,6 +30,7 @@ private const val timeoutConnect = 30   //In seconds
 class APITask @Inject constructor() {
     private val okHttpBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
     private val retrofit: Retrofit
+    private var mGsonConverter: GsonConverterFactory? = null
 
     private var headerInterceptor = Interceptor { chain ->
         val original = chain.request()
@@ -56,7 +60,8 @@ class APITask @Inject constructor() {
         val client = okHttpBuilder.build()
         retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL).client(client)
-                .addConverterFactory(MoshiConverterFactory.create(getMoshi()))
+//                .addConverterFactory(MoshiConverterFactory.create(getMoshi()))
+                .addConverterFactory(gsonConverter)
                 .build()
     }
 
@@ -66,8 +71,22 @@ class APITask @Inject constructor() {
 
     private fun getMoshi(): Moshi {
         return Moshi.Builder()
+                .add(DefaultIfNullFactory())
                 .add(MyKotlinJsonAdapterFactory())
                 .add(MyStandardJsonAdapters.FACTORY)
                 .build()
     }
+
+    private val gsonConverter: GsonConverterFactory
+        get() {
+            if(mGsonConverter == null){
+                mGsonConverter = GsonConverterFactory
+                    .create(
+                        GsonBuilder()
+                        .setLenient()
+                        .disableHtmlEscaping()
+                        .create())
+            }
+            return mGsonConverter!!
+        }
 }

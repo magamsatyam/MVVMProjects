@@ -53,13 +53,12 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextAcronym" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_recipes_list"
+        android:id="@+id/rv_acronym_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/button"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
     <FrameLayout
         android:id="@+id/pb_loading"
